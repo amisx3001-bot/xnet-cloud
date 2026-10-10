@@ -50,6 +50,9 @@ class Handler(BaseHTTPRequestHandler):
         return TOKENS.get(token)
 
     def do_GET(self):
+        # Render health checks must work without a login token.
+        if self.path == '/healthz':
+            return self.reply(200, {'ok': True, 'service': 'XNet Cloud TEST'})
         username = self.user()
         if not username:
             return self.reply(401, {'ok': False, 'error': 'login_required'})
